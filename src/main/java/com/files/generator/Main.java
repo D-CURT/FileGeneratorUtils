@@ -1,4 +1,4 @@
-package com.gmail.estrynvladislav;
+package com.files.generator;
 
 import java.io.IOException;
 

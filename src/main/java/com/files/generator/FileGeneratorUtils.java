@@ -1,6 +1,6 @@
-package com.gmail.estrynvladislav;
+package com.files.generator;
 
-import com.gmail.estrynvladislav.utils.LoggerFactory;
+import com.files.generator.utils.LoggerFactory;
 import com.google.common.base.Stopwatch;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;

@@ -1,4 +1,4 @@
-package com.gmail.estrynvladislav.utils;
+package com.files.generator.utils;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
