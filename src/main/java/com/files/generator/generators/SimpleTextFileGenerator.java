@@ -1,8 +1,8 @@
-package com.files.generator.writers;
+package com.files.generator.generators;
 
 import com.files.generator.utils.LoggerFactory;
+import com.files.generator.writers.SimpleFileWriter;
 import com.google.common.base.Stopwatch;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -12,29 +12,30 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-public class SimpleTextFileWriter implements FileWriter {
+public class SimpleTextFileGenerator implements FileGenerator {
 
-    private final static long MAX_RANGE = 1_000;
+    private final static int DEFAULT_MAX_RANGE = 1_000_000;
     private static final int MIN_RANGE = 0;
-    private static final boolean IS_APPEND_TO_FILE = true;
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final AtomicLong counter;
 
-    public SimpleTextFileWriter() {
+    public SimpleTextFileGenerator() {
         this.counter = new AtomicLong();
     }
 
     @Override
-    public boolean write(Path path, Long linesLimit) throws IOException {
+    public boolean generate(Path path, Long linesLimit) throws IOException {
+        final long maxRange = linesLimit < DEFAULT_MAX_RANGE ? linesLimit : DEFAULT_MAX_RANGE;
         while (counter.get() < linesLimit) {
             Stopwatch timer = Stopwatch.createStarted();
-            List<Long> list = LongStream.range(MIN_RANGE, MAX_RANGE)
+            final long rowsRemains = linesLimit - counter.get();
+            List<Long> list = LongStream.range(MIN_RANGE, Math.min(rowsRemains, maxRange))
                     .mapToObj(this::generateNext)
                     .collect(Collectors.toList());
-            FileUtils.writeLines(path.toFile(), list, IS_APPEND_TO_FILE);
+            SimpleFileWriter.of(path, list).write();
             log.info("Time: " + timer.stop() + ". Lines: " + counter.get());
         }
-        return false;
+        return true;
     }
 
     private long generateNext(Long ignored) {

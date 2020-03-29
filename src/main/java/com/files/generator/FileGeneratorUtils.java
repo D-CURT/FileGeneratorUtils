@@ -1,7 +1,7 @@
 package com.files.generator;
 
 import com.files.generator.utils.LoggerFactory;
-import com.files.generator.utils.FileWriterFactory;
+import com.files.generator.utils.FileGeneratorFactory;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -15,7 +15,7 @@ public final class FileGeneratorUtils {
 
     private static Logger log = LoggerFactory.getLogger(FileGeneratorUtils.class);
 
-    private final static long DEFAULT_MAX_LINES_NUMBER = 1_000;
+    private final static long DEFAULT_MAX_LINES_NUMBER = 1_000_000;
     private static final Path DEFAULT_FILE_PATH = Path.of("sample.txt");
 
     public static void generateSimple() throws IOException {
@@ -31,8 +31,8 @@ public final class FileGeneratorUtils {
                 "File path was not specified, default will be set...");
         Long linesNumber = getVerifiedValue(maxLines, DEFAULT_MAX_LINES_NUMBER,
                 "Lines number was not specified, default will be set...");
-        FileWriterFactory.getWriter(FileType.DEFAULT)
-                .write(path, linesNumber);
+        FileGeneratorFactory.getGenerator(FileType.DEFAULT)
+                .generate(path, linesNumber);
     }
 
     private static <T> T getVerifiedValue(T value, T defaultValue, String errorMessage) {

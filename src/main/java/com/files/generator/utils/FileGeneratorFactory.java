@@ -1,35 +1,35 @@
 package com.files.generator.utils;
 
 import com.files.generator.FileType;
-import com.files.generator.writers.FileWriter;
-import com.files.generator.writers.SimpleTextFileWriter;
+import com.files.generator.generators.FileGenerator;
+import com.files.generator.generators.SimpleTextFileGenerator;
 
 import java.util.Arrays;
 
-public final class FileWriterFactory {
+public final class FileGeneratorFactory {
 
-    private FileWriterFactory(){
+    private FileGeneratorFactory() {
     }
 
     private enum Types {
         TEXT {
             @Override
-            FileWriter createWriter() {
+            FileGenerator createGenerator() {
                 return null;
             }
         }, CSV {
             @Override
-            FileWriter createWriter() {
+            FileGenerator createGenerator() {
                 return null;
             }
         }, DEFAULT {
             @Override
-            FileWriter createWriter() {
-                return new SimpleTextFileWriter();
+            FileGenerator createGenerator() {
+                return new SimpleTextFileGenerator();
             }
         };
 
-        abstract FileWriter createWriter();
+        abstract FileGenerator createGenerator();
 
         boolean isEqual(FileType type) {
             return this.name().equals(type.name());
@@ -43,8 +43,8 @@ public final class FileWriterFactory {
         }
     }
 
-    public static FileWriter getWriter(FileType type) {
-        return Types.findType(type).createWriter();
+    public static FileGenerator getGenerator(FileType type) {
+        return Types.findType(type).createGenerator();
     }
 
 }
