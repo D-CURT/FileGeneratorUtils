@@ -3,8 +3,10 @@ package com.files.generator.utils;
 import com.files.generator.FileType;
 import com.files.generator.generators.FileGenerator;
 import com.files.generator.generators.SimpleTextFileGenerator;
+import com.google.common.collect.Maps;
 
-import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.Map;
 
 public final class FileGeneratorFactory {
 
@@ -29,17 +31,13 @@ public final class FileGeneratorFactory {
             }
         };
 
+        private static final Map<FileType, Types> types =
+                Maps.asMap(EnumSet.allOf(FileType.class), type -> Types.valueOf(type.name()));
+
         abstract FileGenerator createGenerator();
 
-        boolean isEqual(FileType type) {
-            return this.name().equals(type.name());
-        }
-
         static Types findType(FileType type) {
-            return Arrays.stream(values())
-                    .filter(writerType -> writerType.isEqual(type))
-                    .findAny()
-                    .orElse(DEFAULT);
+            return types.get(type);
         }
     }
 
