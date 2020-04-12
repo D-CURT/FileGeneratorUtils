@@ -27,15 +27,15 @@ public final class FileGeneratorUtils {
     }
 
     public static void generateSimple(Path filePath, Long maxLines) throws IOException {
-        Path path = getVerifiedValue(filePath, DEFAULT_FILE_PATH,
+        Path path = getNonNullValue(filePath, DEFAULT_FILE_PATH,
                 "File path was not specified, default will be set...");
-        Long linesNumber = getVerifiedValue(maxLines, DEFAULT_MAX_LINES_NUMBER,
+        Long linesNumber = getNonNullValue(maxLines, DEFAULT_MAX_LINES_NUMBER,
                 "Lines number was not specified, default will be set...");
         FileGeneratorFactory.getGenerator(FileType.DEFAULT)
                 .generate(path, linesNumber);
     }
 
-    private static <T> T getVerifiedValue(T value, T defaultValue, String errorMessage) {
+    private static <T> T getNonNullValue(T value, T defaultValue, String errorMessage) {
         return Optional.ofNullable(value).orElseGet(() -> {
             log.info(errorMessage);
             return defaultValue;
