@@ -3,7 +3,9 @@ package com.files.generator.utils;
 import com.files.generator.FileType;
 import com.files.generator.generators.FileGenerator;
 import com.files.generator.generators.SimpleTextFileGenerator;
+import com.files.generator.generators.TextFileGenerator;
 import com.files.generator.writers.SimpleFileWriter;
+import com.files.generator.writers.TextFileWriter;
 import com.google.common.collect.Maps;
 
 import java.util.EnumSet;
@@ -18,7 +20,7 @@ public final class FileGeneratorFactory {
         TEXT {
             @Override
             FileGenerator createGenerator() {
-                return null;
+                return new TextFileGenerator(new TextFileWriter());
             }
         }, CSV {
             @Override

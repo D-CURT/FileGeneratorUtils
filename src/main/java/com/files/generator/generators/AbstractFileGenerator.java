@@ -8,7 +8,6 @@ import lombok.Getter;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
@@ -27,6 +26,9 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
     @Getter(AccessLevel.PROTECTED)
     private final AtomicLong counter;
 
+    @Getter(AccessLevel.PROTECTED)
+    private FileGeneratorConfig config;
+
     public AbstractFileGenerator(FileWriter<Value> writer) {
         this.counter = new AtomicLong();
         this.writer = writer;
@@ -34,6 +36,7 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
 
     @Override
     public boolean generate(FileGeneratorConfig config) throws IOException {
+        this.config = config;
         Long linesLimit = config.getLinesNumber();
         final long maxRange = linesLimit < DEFAULT_MAX_RANGE ? linesLimit : DEFAULT_MAX_RANGE;
         while (counter.get() < linesLimit) {
