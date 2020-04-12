@@ -1,5 +1,6 @@
 package com.files.generator;
 
+import com.files.generator.generators.FileGeneratorConfig;
 import com.files.generator.utils.LoggerFactory;
 import com.files.generator.utils.FileGeneratorFactory;
 import org.apache.log4j.Logger;
@@ -32,7 +33,11 @@ public final class FileGeneratorUtils {
         Long linesNumber = getNonNullValue(maxLines, DEFAULT_MAX_LINES_NUMBER,
                 "Lines number was not specified, default will be set...");
         FileGeneratorFactory.getGenerator(FileType.DEFAULT)
-                .generate(path, linesNumber);
+                .generate(
+                        FileGeneratorConfig.builder()
+                                .path(path)
+                                .linesNumber(linesNumber)
+                                .build());
     }
 
     private static <T> T getNonNullValue(T value, T defaultValue, String errorMessage) {

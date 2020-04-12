@@ -33,7 +33,8 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
     }
 
     @Override
-    public boolean generate(Path path, Long linesLimit) throws IOException {
+    public boolean generate(FileGeneratorConfig config) throws IOException {
+        Long linesLimit = config.getLinesNumber();
         final long maxRange = linesLimit < DEFAULT_MAX_RANGE ? linesLimit : DEFAULT_MAX_RANGE;
         while (counter.get() < linesLimit) {
             Stopwatch timer = Stopwatch.createStarted();
@@ -41,7 +42,7 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
             List<Value> values = LongStream.range(MIN_RANGE, Math.min(rowsRemains, maxRange))
                     .mapToObj(this::generateNext)
                     .collect(Collectors.toList());
-            writer.write(path, values);
+            writer.write(config.getPath(), values);
             log.info("Time: " + timer.stop() + ". Lines: " + counter.get());
         }
         return true;

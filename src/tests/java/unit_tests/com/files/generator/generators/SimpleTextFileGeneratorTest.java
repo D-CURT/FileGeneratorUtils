@@ -1,6 +1,7 @@
 package unit_tests.com.files.generator.generators;
 
 import com.files.generator.generators.AbstractFileGenerator;
+import com.files.generator.generators.FileGeneratorConfig;
 import com.files.generator.generators.SimpleTextFileGenerator;
 import com.files.generator.writers.FileWriter;
 import com.files.generator.writers.SimpleFileWriter;
@@ -34,7 +35,7 @@ class SimpleTextFileGeneratorTest {
 
     @Test
     void testGenerate() throws Exception {
-        generator.generate(Path.of("test.txt"), 1_000L);
+        generator.generate(FileGeneratorConfig.builder().path(Path.of("test.txt")).linesNumber(1_000L).build());
         Assertions.assertEquals(
                 1_000,
                 ((AtomicLong) ReflectionUtils.tryToReadFieldValue(
