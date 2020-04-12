@@ -3,6 +3,7 @@ package com.files.generator.utils;
 import com.files.generator.FileType;
 import com.files.generator.generators.FileGenerator;
 import com.files.generator.generators.SimpleTextFileGenerator;
+import com.files.generator.writers.SimpleFileWriter;
 import com.google.common.collect.Maps;
 
 import java.util.EnumSet;
@@ -27,7 +28,7 @@ public final class FileGeneratorFactory {
         }, DEFAULT {
             @Override
             FileGenerator createGenerator() {
-                return new SimpleTextFileGenerator();
+                return new SimpleTextFileGenerator(new SimpleFileWriter());
             }
         };
 
