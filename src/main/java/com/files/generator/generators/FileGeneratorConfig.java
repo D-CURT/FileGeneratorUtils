@@ -15,4 +15,8 @@ public class FileGeneratorConfig {
 
     private Integer lineSize;
 
+    private Long wordsNumber;
+
+    private Integer wordsInRow;
+
 }

@@ -1,5 +1,6 @@
 package com.files.generator.generators;
 
+import com.files.generator.Validator;
 import com.files.generator.utils.LoggerFactory;
 import com.files.generator.writers.FileWriter;
 import com.google.common.base.Stopwatch;
@@ -16,7 +17,7 @@ import java.util.stream.LongStream;
 public abstract class AbstractFileGenerator<Value> implements FileGenerator {
 
     public static final int DEFAULT_MAX_RANGE = 1_000_000;
-    public static final int MIN_RANGE = 0;
+    public static final Integer ZERO = 0;
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -29,6 +30,9 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
     @Getter(AccessLevel.PROTECTED)
     private FileGeneratorConfig config;
 
+    AtomicLong linesLimit;
+    long maxRange;
+
     public AbstractFileGenerator(FileWriter<Value> writer) {
         this.counter = new AtomicLong();
         this.writer = writer;
@@ -36,13 +40,11 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
 
     @Override
     public boolean generate(FileGeneratorConfig config) throws IOException {
-        this.config = config;
-        Long linesLimit = config.getLinesNumber();
-        final long maxRange = linesLimit < DEFAULT_MAX_RANGE ? linesLimit : DEFAULT_MAX_RANGE;
-        while (counter.get() < linesLimit) {
+        initGenerator(config);
+        while (counter.get() < linesLimit.get()) {
             Stopwatch timer = Stopwatch.createStarted();
-            final long rowsRemains = linesLimit - counter.get();
-            List<Value> values = LongStream.range(MIN_RANGE, Math.min(rowsRemains, maxRange))
+            final long rowsRemains = linesLimit.get() - counter.get();
+            List<Value> values = LongStream.range(ZERO, Math.min(rowsRemains, maxRange))
                     .mapToObj(this::generateNext)
                     .collect(Collectors.toList());
             writer.write(config.getPath(), values);
@@ -52,5 +54,16 @@ public abstract class AbstractFileGenerator<Value> implements FileGenerator {
     }
 
     protected abstract Value generateNext(Long ignored);
+
+    protected void initSpecific(FileGeneratorConfig config) {
+    }
+
+    private void initGenerator(FileGeneratorConfig config) {
+        this.config = config;
+        this.linesLimit = new AtomicLong(
+                Validator.getNonNullValue(config.getLinesNumber(), ZERO.longValue(), null));
+        this.maxRange = linesLimit.get() < DEFAULT_MAX_RANGE ? linesLimit.get() : DEFAULT_MAX_RANGE;
+        initSpecific(config);
+    }
 
 }

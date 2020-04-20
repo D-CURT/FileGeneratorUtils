@@ -2,6 +2,7 @@ package com.files.generator.utils;
 
 import com.files.generator.FileType;
 import com.files.generator.generators.FileGenerator;
+import com.files.generator.generators.LoremTextFileGenerator;
 import com.files.generator.generators.SimpleTextFileGenerator;
 import com.files.generator.generators.TextFileGenerator;
 import com.files.generator.writers.SimpleFileWriter;
@@ -22,7 +23,14 @@ public final class FileGeneratorFactory {
             FileGenerator createGenerator() {
                 return new TextFileGenerator(new TextFileWriter());
             }
-        }, CSV {
+        },
+        LOREM_TEXT {
+            @Override
+            FileGenerator createGenerator() {
+                return new LoremTextFileGenerator(new TextFileWriter());
+            }
+        },
+        CSV {
             @Override
             FileGenerator createGenerator() {
                 return null;

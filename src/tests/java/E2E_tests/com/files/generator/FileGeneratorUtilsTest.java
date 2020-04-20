@@ -34,6 +34,14 @@ class FileGeneratorUtilsTest {
     }
 
     @Test
+    void testLifecycleGenerateSimpleSpecifiedMaxLines() throws IOException {
+        this.filePath = Path.of(SAMPLE_FILE_NAME);
+        FileGeneratorUtils.generateSimple(12_000_000L);
+        verifyGeneratedFile(108_888_897, 12_000_000);
+        Assertions.assertTrue(Files.lines(filePath).allMatch(s -> s.matches("^\\d+$")), "The file should contains digits only");
+    }
+
+    @Test
     void testLifecycleGenerateSimpleAllArguments() throws IOException {
         this.filePath = Path.of("test.txt");
         FileGeneratorUtils.generateSimple(filePath, 12_000_000L);
@@ -42,36 +50,36 @@ class FileGeneratorUtilsTest {
     }
 
     @Test
-    void testLifecycleGenerateTextNoneArguments() throws IOException {
+    void testLifecycleGenerateLettersNoneArguments() throws IOException {
         this.filePath = Path.of(SAMPLE_FILE_NAME);
-        FileGeneratorUtils.generateText();
+        FileGeneratorUtils.generateLetters();
         verifyGeneratedFile(12_000_000, SAMPLE_FILE_LINES);
         Assertions.assertTrue(Files.lines(filePath).map(String::length).allMatch(Integer.valueOf(10)::equals));
         Assertions.assertTrue(Files.lines(filePath).allMatch(s -> s.matches("^\\D+$")), "The file should contains letters only");
     }
 
     @Test
-    void testLifecycleGenerateTextSpecifiedPath() throws IOException {
+    void testLifecycleGenerateLettersSpecifiedPath() throws IOException {
         this.filePath = Path.of("test.txt");
-        FileGeneratorUtils.generateText(filePath);
+        FileGeneratorUtils.generateLetters(filePath);
         verifyGeneratedFile(12_000_000, SAMPLE_FILE_LINES);
         Assertions.assertTrue(Files.lines(filePath).map(String::length).allMatch(Integer.valueOf(10)::equals));
         Assertions.assertTrue(Files.lines(filePath).allMatch(s -> s.matches("^\\D+$")), "The file should contains letters only");
     }
 
     @Test
-    void testLifecycleGenerateTextSpecifiedPathAndMaxLines() throws IOException {
+    void testLifecycleGenerateLettersSpecifiedPathAndMaxLines() throws IOException {
         this.filePath = Path.of("test.txt");
-        FileGeneratorUtils.generateText(filePath, 12_000_000L);
+        FileGeneratorUtils.generateLetters(filePath, 12_000_000L);
         verifyGeneratedFile(144_000_000, 12_000_000);
         Assertions.assertTrue(Files.lines(filePath).map(String::length).allMatch(Integer.valueOf(10)::equals));
         Assertions.assertTrue(Files.lines(filePath).allMatch(s -> s.matches("^\\D+$")), "The file should contains letters only");
     }
 
     @Test
-    void testLifecycleGenerateTextAllArguments() throws IOException {
+    void testLifecycleGenerateLettersAllArguments() throws IOException {
         this.filePath = Path.of("test.txt");
-        FileGeneratorUtils.generateText(filePath, 10_000_000L, 50);
+        FileGeneratorUtils.generateLetters(filePath, 10_000_000L, 50);
         verifyGeneratedFile(520_000_000, 10_000_000);
         Assertions.assertTrue(Files.lines(filePath).map(String::length).allMatch(Integer.valueOf(50)::equals));
         Assertions.assertTrue(Files.lines(filePath).allMatch(s -> s.matches("^\\D+$")), "The file should contains letters only");
